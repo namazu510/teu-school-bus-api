@@ -1,0 +1,2 @@
+class DefualtOperatin < ApplicationRecord
+end
