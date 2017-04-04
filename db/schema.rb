@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20170403063557) do
     t.boolean  "is_shuttle"
     t.time     "begin"
     t.time     "end"
-    t.integer  "interval"
+    t.string   "interval"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
     t.index ["plan_id"], name: "index_schedules_on_plan_id"

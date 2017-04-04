@@ -9,7 +9,7 @@ class CreateSchedules < ActiveRecord::Migration[5.0]
       t.boolean :is_shuttle
       t.time :begin
       t.time :end
-      t.integer :interval
+      t.string :interval
 
       t.timestamps
     end
