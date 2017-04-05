@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  is_irregular: false
+  weekday: 1
+  date: 2017-04-05
+  source_url: MyText
+
+two:
+  is_irregular: false
+  weekday: 1
+  date: 2017-04-05
+  source_url: MyText

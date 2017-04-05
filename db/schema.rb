@@ -10,22 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170403063557) do
+ActiveRecord::Schema.define(version: 20170405061723) do
 
-  create_table "defualt_operatins", force: :cascade do |t|
-    t.integer  "week_day"
+  create_table "operation_plans", force: :cascade do |t|
+    t.integer  "operation_id"
     t.integer  "plan_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["plan_id"], name: "index_defualt_operatins_on_plan_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
-  create_table "irregular_operations", force: :cascade do |t|
+  create_table "operations", force: :cascade do |t|
+    t.boolean  "is_irregular"
+    t.integer  "weekday"
     t.date     "date"
-    t.integer  "plan_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["plan_id"], name: "index_irregular_operations_on_plan_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
   end
 
   create_table "plans", force: :cascade do |t|
@@ -43,8 +42,8 @@ ActiveRecord::Schema.define(version: 20170403063557) do
     t.integer  "from"
     t.integer  "to"
     t.boolean  "is_shuttle"
-    t.time     "begin"
-    t.time     "end"
+    t.string   "begin"
+    t.string   "end"
     t.string   "interval"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false

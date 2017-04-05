@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class IrregularOperationTest < ActiveSupport::TestCase
+class OperationTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

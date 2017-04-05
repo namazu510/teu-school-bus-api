@@ -1,9 +1,9 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  week_day: 1
-  plan: 
+  operation_id: 1
+  plan_id: 1
 
 two:
-  week_day: 1
-  plan: 
+  operation_id: 1
+  plan_id: 1

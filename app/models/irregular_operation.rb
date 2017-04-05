@@ -1,2 +1,0 @@
-class IrregularOperation < ApplicationRecord
-end
