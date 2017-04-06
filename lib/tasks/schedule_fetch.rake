@@ -121,7 +121,7 @@ namespace :schedule_fetch do
       col1 = row.css('td')[0].try(:inner_text)
       col2 = row.css('td')[1].try(:inner_text)
       col3 = row.css('td')[2].try(:inner_text)
-      col4 = row.css('td')[3].try(:inner_text)
+      col4 = row.at_css('td:last-child').try(:inner_text)
 
       # 時刻列か?
       if Tod::TimeOfDay.parsable? col1
