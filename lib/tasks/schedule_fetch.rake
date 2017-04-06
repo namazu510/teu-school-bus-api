@@ -21,17 +21,36 @@ namespace :schedule_fetch do
       url = 'http://www.teu.ac.jp' + link.attribute('href').text
 
       p text
-      next if text.match(/平成\d+年\d+月\d+日.*/).nil?
-      irregular_date = Date.parse(text.match(/(平成\d+年\d+月\d+日).*/)[1])
-      p irregular_date
 
-      irregular_operation = Operation.new
-      irregular_operation.is_irregular = true
-      irregular_operation.date = irregular_date
-      irregular_operation.weekday = irregular_date.wday
+      # 平成YY年M月D日MM月DD日・DD日・DD日のような日付をパースする
+      irregular_days = []
+      year = Date.current.strftime('%Jy')
+      month = Date.current.month.to_s + '月'
+      text.scan(/平成\d+年|\d+月|\d+日/) do |token|
+        year = token if token.match(/平成\d+年/)
+        month = token if token.match(/\d+月/)
+        irregular_days << Date.parse(year + month + token) if token.match(/\d+日/)
+      end
+      next if irregular_days.empty?
+      p irregular_days
 
-      irregular_operation.plans << parse_schedule_page(url)
-      irregular_operation.save
+      plans = parse_schedule_page(url)
+
+      irregular_days.each do |irregular_date|
+        # 既にその日のデータが登録されていれば新規追加しない
+        next unless Operation.find_by_date(irregular_date).nil?
+
+        irregular_operation = Operation.new
+        irregular_operation.is_irregular = true
+        irregular_operation.date = irregular_date
+        irregular_operation.weekday = irregular_date.wday
+
+        irregular_operation.plans << plans
+
+        p irregular_date.to_s + 'のスケジュールをイレギュラー運行日として追加'
+
+        irregular_operation.save
+      end
     end
   end
 
