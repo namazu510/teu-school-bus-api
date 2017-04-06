@@ -23,8 +23,8 @@ stderr_path File.expand_path('../../log/unicorn_stderr.log', __FILE__)
 stdout_path File.expand_path('../../log/unicorn_stdout.log', __FILE__)
 
 # Nginxで使用する場合は以下の設定を行う。
-listen '/tmp/unicorn.sock'
-pid    '/tmp/unicorn.pid'
+listen rails_root + '/tmp/unicorn.sock'
+pid    rails_root + '/tmp/unicorn.pid'
 
 # 基本的には`true`を指定する。Unicornの再起動時にダウンタイムなしで再起動が行われる。
 preload_app true
