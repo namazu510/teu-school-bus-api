@@ -1,0 +1,208 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "東京工科大学スクールバスAPI",
+        "description": "東京工科大学のスクールバスの時刻が分かるAPIです.　非公式です.  \n大学のアクセスページに公示されるバス時刻表(　http://www.teu.ac.jp/campus/access/006644.html#bus)\nをスクレイピングしそのデータを元に応答します, スクレイピングは完璧ではないため稀に(通常スケジュールで運行しない日のコーナーケースに該当した場合)間違えます. 承知の上お使いください.  \n利用は自由です. ただしこのAPIの仕様の結果生じたいかなる結果への責任は負いかねます. またサービスは事前の告知なく終了する可能性があります.\n",
+        "contact": {
+            "name": "namazu510",
+            "email": "namazu510@hotmail.co.jp"
+        },
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0.0"
+    },
+    "host": "namazu.top",
+    "schemes": [
+        "https",
+        "http"
+    ],
+    "basePath": "/school_bus/api/v1",
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/time": {
+            "get": {
+                "summary": "近いバスの時間を得ます",
+                "description": "指定された経路を通るこれから発車するバスの時刻一覧を得ます\n大学⇔八王子みなみ野 or 大学⇔八王子駅南口 or  大学⇔学生寮\n",
+                "parameters": [
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "経路開始地点(0 = 大学, 1 = 八王子みなみ野, 2 = 八王子駅南口, 3 = 学生寮)",
+                        "required": true,
+                        "type": "number",
+                        "format": "integer"
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "経路終端地点(0 = 大学, 1 = 八王子みなみ野, 2 = 八王子駅南口, 3 = 学生寮)",
+                        "required": true,
+                        "type": "number",
+                        "format": "integer"
+                    },
+                    {
+                        "name": "time",
+                        "in": "query",
+                        "description": "時間指定(検索時刻を指定します)　Default = 現在時刻",
+                        "required": false,
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    {
+                        "name": "par",
+                        "in": "query",
+                        "description": "表示件数(次発から何件先の時刻まで出すか)　Default = 3",
+                        "type": "number",
+                        "format": "interger"
+                    }
+                ],
+                "tags": [
+                    "Bus"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "これから出るバスの時刻一覧",
+                        "schema": {
+                            "$ref": "#/definitions/Plan"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        },
+        "/schedule_by_day": {
+            "get": {
+                "summary": "バスの１日の運行スケジュール",
+                "description": "指定された経路を通るバスの時刻一覧を得ます\n大学⇔八王子みなみ野 or 大学⇔八王子駅南口 or  大学⇔学生寮\n",
+                "parameters": [
+                    {
+                        "name": "from",
+                        "in": "query",
+                        "description": "経路開始地点(0 = 大学, 1 = 八王子みなみ野, 2 = 八王子駅南口, 3 = 学生寮)",
+                        "required": true,
+                        "type": "number",
+                        "format": "integer"
+                    },
+                    {
+                        "name": "to",
+                        "in": "query",
+                        "description": "経路終端地点(0 = 大学, 1 = 八王子みなみ野, 2 = 八王子駅南口, 3 = 学生寮)",
+                        "required": true,
+                        "type": "number",
+                        "format": "integer"
+                    },
+                    {
+                        "name": "time",
+                        "in": "query",
+                        "description": "日時指定(検索日を指定します)　Default = 今日",
+                        "required": false,
+                        "type": "string",
+                        "format": "date"
+                    }
+                ],
+                "tags": [
+                    "Bus"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "その日のバスの時刻一覧",
+                        "schema": {
+                            "$ref": "#/definitions/Plan"
+                        }
+                    },
+                    "default": {
+                        "description": "Unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/Error"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "Plan": {
+            "type": "object",
+            "properties": {
+                "from": {
+                    "type": "number",
+                    "description": "出発地点"
+                },
+                "to": {
+                    "type": "number",
+                    "description": "到着地点"
+                },
+                "time": {
+                    "type": "string",
+                    "format": "yyyy-mm-dd hh:mm:dd",
+                    "description": "検索時刻"
+                },
+                "is_irregular_day": {
+                    "type": "boolean",
+                    "description": "今日のバス運行が通常運行と異なっているか（バスの運行には通常のスケジュールと臨時スケジュールがある)"
+                },
+                "schedules": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Schedule"
+                    },
+                    "description": "検索時刻以後出発するバスのスケジュール, 存在しない場合空配列"
+                }
+            }
+        },
+        "Schedule": {
+            "type": "object",
+            "properties": {
+                "is_shuttle": {
+                    "type": "boolean",
+                    "description": "シャトル運行かどうか"
+                },
+                "begin": {
+                    "type": "string",
+                    "description": "シャトル運行開始時刻(シャトル運行でない場合キーなし)"
+                },
+                "end": {
+                    "type": "string",
+                    "description": "シャトル運行終了時刻(シャトル運行でない場合キーなし)"
+                },
+                "interval": {
+                    "type": "string",
+                    "description": "シャトル運行の備考(運行間隔等)　exp. シャトル運行3～5分間隔　(シャトル運行でない場合キーなし)"
+                },
+                "departure_time": {
+                    "type": "string",
+                    "format": "hh:mm:ss",
+                    "description": "出発時刻(シャトル運行の場合キーなし)"
+                },
+                "arriva_time": {
+                    "type": "string",
+                    "format": "hh:mm:ss",
+                    "description": "到着時刻(シャトル運行の場合キーなし)"
+                }
+            }
+        },
+        "Error": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "error": {
+                    "type": "string"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
